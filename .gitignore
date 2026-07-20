@@ -1,0 +1,17 @@
+# Секреты — никогда не выкладывать
+.env
+
+# .NET
+backend/TicketService/bin/
+backend/TicketService/obj/
+backend/TicketService/publish/
+
+# Node.js
+frontend/node_modules/
+frontend/dist/
+
+# Docker
+*.log
+
+# VS Code
+.vscode/
