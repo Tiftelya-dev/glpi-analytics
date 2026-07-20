@@ -1,0 +1,63 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+
+.app-header {
+  background: #1a1a2e;
+  color: white;
+  padding: 20px 40px;
+  margin-bottom: 24px;
+}
+
+main { max-width: 1200px; margin: 0 auto; padding: 0 24px 40px; }
+
+.chart-block {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.chart-block h2 { margin-bottom: 16px; font-size: 1.2rem; color: #1a1a2e; }
+
+.filters { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+
+.filters input, .filters select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.filters button, .tickets-header button {
+  padding: 8px 20px;
+  background: #4f86f7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.filters button:hover, .tickets-header button:hover { background: #3a6fd8; }
+
+.tickets-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.tickets-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+
+.tickets-table th {
+  background: #f8f9fa;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tickets-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; }
+
+.tickets-table tr:hover td { background: #f8f9ff; }

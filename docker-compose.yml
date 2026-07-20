@@ -1,0 +1,93 @@
+services:
+
+  # --- MariaDB для GLPI ---
+  mariadb:
+    image: mariadb:10.11
+    container_name: glpi_mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # --- GLPI ---
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:80"
+    environment:
+      - TIMEZONE=Asia/Bishkek
+    volumes:
+      - glpi_files:/var/www/html/files
+      - glpi_plugins:/var/www/html/plugins
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # --- PostgreSQL для бэкенда ---
+  postgres:
+    image: postgres:16
+    container_name: tickets_postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # --- ASP.NET Core бэкенд (Dockerfile создадим позже) ---
+  backend:
+    build:
+      context: ./backend/TicketService
+      dockerfile: Dockerfile
+    container_name: tickets_backend
+    depends_on:
+      - postgres
+      - glpi
+    ports:
+      - "5000:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Glpi__BaseUrl=http://glpi/apirest.php
+      - Glpi__AppToken=${GLPI_APP_TOKEN}
+      - Glpi__UserToken=${GLPI_USER_TOKEN}
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  # --- React фронтенд (Dockerfile создадим позже) ---
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: tickets_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - app_network
+    restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+  glpi_files:
+  glpi_plugins:
+  postgres_data:
